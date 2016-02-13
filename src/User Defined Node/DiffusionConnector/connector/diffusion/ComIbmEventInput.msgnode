@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="connector/diffusion/ComIbmEventInput.msgnode" nsPrefix="connector_diffusion_ComIbmEventInput.msgnode">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1" message="in">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.connectorName" name="connectorName" defaultValueLiteral="DiffusionConnector">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.protocol" name="protocol" lowerBound="1" eType="//@eClassifiers.1" defaultValueLiteral="dpt"/>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.hostName" name="hostName" lowerBound="1" defaultValueLiteral="localhost">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.port" name="port" lowerBound="1" defaultValueLiteral="8080">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.userName" name="userName" lowerBound="1">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.password" name="password" lowerBound="1">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.topicSelector" name="topicSelector" lowerBound="1">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <translation xmi:type="utility:TranslatableString" key="ComIbmEventInput" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/DiffusionConnector/icons/full/obj16/connector/diffusion/ComIbmEventInput.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/DiffusionConnector/icons/full/obj30/connector/diffusion/ComIbmEventInput.gif"/>
+    <composition>
+      <nodes xmi:type="eflow:FCMSink" xmi:id="OutTerminal.out" location="100,20">
+        <translation xmi:type="utility:TranslatableString" key="OutTerminal.out" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+      </nodes>
+      <nodes xmi:type="eflow:FCMSink" xmi:id="OutTerminal.failure" location="200,40">
+        <translation xmi:type="utility:TranslatableString" key="OutTerminal.failure" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+      </nodes>
+    </composition>
+    <propertyOrganizer>
+      <propertyDescriptor groupName="Group.Basic" hidden="true" describedAttribute="Property.connectorName">
+        <propertyName xmi:type="utility:TranslatableString" key="Property.connectorName" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+        <propertyDescriptor groupName="Group.Server" configurable="true" describedAttribute="Property.protocol">
+          <propertyName xmi:type="utility:TranslatableString" key="Property.protocol" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+          <propertyDescriptor groupName="Group.Server" configurable="true" describedAttribute="Property.hostName">
+            <propertyName xmi:type="utility:TranslatableString" key="Property.hostName" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+            <propertyDescriptor groupName="Group.Server" configurable="true" describedAttribute="Property.port">
+              <propertyName xmi:type="utility:TranslatableString" key="Property.port" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+              <propertyDescriptor groupName="Group.Authentication" configurable="true" describedAttribute="Property.userName">
+                <propertyName xmi:type="utility:TranslatableString" key="Property.userName" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+                <propertyDescriptor groupName="Group.Authentication" configurable="true" describedAttribute="Property.password">
+                  <propertyName xmi:type="utility:TranslatableString" key="Property.password" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+                  <propertyDescriptor groupName="Group.Topic" configurable="true" describedAttribute="Property.topicSelector">
+                    <propertyName xmi:type="utility:TranslatableString" key="Property.topicSelector" bundleName="connector/diffusion/ComIbmEventInput" pluginId="DiffusionConnector"/>
+                  </propertyDescriptor>
+                </propertyDescriptor>
+              </propertyDescriptor>
+            </propertyDescriptor>
+          </propertyDescriptor>
+        </propertyDescriptor>
+      </propertyDescriptor>
+    </propertyOrganizer>
+  </eClassifiers>
+  <eClassifiers xmi:type="ecore:EEnum">
+    <eLiterals xmi:id="protocol.dpt" name="dpt"/>
+    <eLiterals xmi:id="protocol.ws" name="ws" value="1"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+    <!--This is a generated file.-->
+    <!--User modifications to the values in this file will be preserved-->
+    <context id="connector.diffusion.ComIbmOutput" title="Diffusion Publisher">
+        <description>Diffusion Publisher</description>
+    </context>
+    <context id="connector.diffusion.ComIbmEventInput" title="Diffusion Subscriber">
+        <description>Diffusion Subscriber</description>
+    </context>
+</contexts>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connectorProvider name="DiffusionConnector">
+     <connectorFactory className="connector.diffusion.DiffusionConnectorFactory">
+         <properties>
+             <property name="host" value="localhost"/>
+             <property name="port" value="8080"/>
+             <property name="protocol" value="ws"/>
+             <property name="userName" value="admin"/>
+             <property name="password" value="password"/>
+             <property name="topic" value="iibtest"/>
+         </properties>
+     </connectorFactory>
+ </connectorProvider>
