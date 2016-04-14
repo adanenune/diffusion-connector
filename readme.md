@@ -2,15 +2,15 @@
 
 ## Version
 
-Diffusion Connector 10.0.0.0
+Diffusion Connector 10.0.0.0 Updated
 Push Technology Ltd.
-February 2016
+April 2016
 
 ## Introduction
 
 This project provides an IBM IIB connector for Diffusion and Reappt from Push Technology. The connector allows for both
-the publication of data via Diffusion/Reappt as well as subscription of data from it.  The connector currently uses
-Single Value Topics only but will implement more complex topic types in he future.
+the publication of data via Diffusion/Reappt as well as subscription of data from it.  The supports both Single Value 
+and JSON Topics. The JSON topics are a new feature of Diffusion 5.7 and so at least version 5.6.0 is required.
 
 For further information on Diffusion and Reappt please go to http://www.pushtechnology.com and http://reapt.io
 

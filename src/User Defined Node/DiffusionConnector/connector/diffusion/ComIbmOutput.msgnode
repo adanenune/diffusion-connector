@@ -21,6 +21,7 @@
     <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.topic" name="topic" lowerBound="1">
       <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.topicType" name="topicType" lowerBound="1" eType="//@eClassifiers.2" defaultValueLiteral="SingleValue"/>
     <translation xmi:type="utility:TranslatableString" key="ComIbmOutput" bundleName="connector/diffusion/ComIbmOutput" pluginId="DiffusionConnector"/>
     <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/DiffusionConnector/icons/full/obj16/connector/diffusion/ComIbmOutput.gif"/>
     <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/DiffusionConnector/icons/full/obj30/connector/diffusion/ComIbmOutput.gif"/>
@@ -47,6 +48,9 @@
                   <propertyName xmi:type="utility:TranslatableString" key="Property.password" bundleName="connector/diffusion/ComIbmOutput" pluginId="DiffusionConnector"/>
                   <propertyDescriptor groupName="Group.Topic" configurable="true" describedAttribute="Property.topic">
                     <propertyName xmi:type="utility:TranslatableString" key="Property.topic" bundleName="connector/diffusion/ComIbmOutput" pluginId="DiffusionConnector"/>
+                    <propertyDescriptor groupName="Group.Topic" describedAttribute="Property.topicType">
+                      <propertyName xmi:type="utility:TranslatableString" key="Property.topicType" bundleName="connector/diffusion/ComIbmOutput" pluginId="DiffusionConnector"/>
+                    </propertyDescriptor>
                   </propertyDescriptor>
                 </propertyDescriptor>
               </propertyDescriptor>
@@ -59,5 +63,9 @@
   <eClassifiers xmi:type="ecore:EEnum">
     <eLiterals xmi:id="protocol.dpt" name="dpt"/>
     <eLiterals xmi:id="protocol.ws" name="ws" value="1"/>
+  </eClassifiers>
+  <eClassifiers xmi:type="ecore:EEnum">
+    <eLiterals xmi:id="topicType.SingleValue" name="SingleValue"/>
+    <eLiterals xmi:id="topicType.JSON" name="JSON" value="1"/>
   </eClassifiers>
 </ecore:EPackage>

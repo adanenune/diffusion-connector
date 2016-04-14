@@ -25,6 +25,7 @@ public class DiffusionSubscriberNodeUDN extends Node {
 	protected final static String PROPERTY_USERNAME = "userName";
 	protected final static String PROPERTY_PASSWORD = "password";
 	protected final static String PROPERTY_TOPICSELECTOR = "topicSelector";
+	protected final static String PROPERTY_TOPICTYPE = "topicType";
 
 
 	/**
@@ -56,6 +57,36 @@ public class DiffusionSubscriberNodeUDN extends Node {
 		public static String[] values = new String[]{ "dpt", "ws" };
 
 	}
+
+	/**
+	 * <I>ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE</I>
+	 * <pre>
+	 * ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.SingleValue = Single Value
+	 * ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.JSON = JSON
+	 * </pre>
+	 */
+	public static class ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE {
+		private String value;
+
+		public static final ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE SingleValue = new ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE("SingleValue");
+		public static final ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE JSON = new ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE("JSON");
+
+		protected ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE(String value) {
+			this.value = value;
+		}
+		public String toString() {
+			return value;
+		}
+
+		protected static ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE getEnumFromString(String enumValue) {
+			ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE enumConst = ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.SingleValue;
+			if (ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.JSON.value.equals(enumValue)) enumConst = ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.JSON;
+			return enumConst;
+		}
+
+		public static String[] values = new String[]{ "SingleValue", "JSON" };
+
+	}
 	protected NodeProperty[] getNodeProperties() {
 		return new NodeProperty[] {
 			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_CONNECTORNAME,		NodeProperty.Usage.OPTIONAL,	false,	NodeProperty.Type.STRING, "DiffusionConnector","","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector"),
@@ -64,7 +95,8 @@ public class DiffusionSubscriberNodeUDN extends Node {
 			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_PORT,		NodeProperty.Usage.MANDATORY,	true,	NodeProperty.Type.STRING, "8080","","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector"),
 			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_USERNAME,		NodeProperty.Usage.MANDATORY,	true,	NodeProperty.Type.STRING, null,"","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector"),
 			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_PASSWORD,		NodeProperty.Usage.MANDATORY,	true,	NodeProperty.Type.STRING, null,"","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector"),
-			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_TOPICSELECTOR,		NodeProperty.Usage.MANDATORY,	true,	NodeProperty.Type.STRING, null,"","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector")
+			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_TOPICSELECTOR,		NodeProperty.Usage.MANDATORY,	true,	NodeProperty.Type.STRING, null,"","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector"),
+			new NodeProperty(DiffusionSubscriberNodeUDN.PROPERTY_TOPICTYPE,		NodeProperty.Usage.OPTIONAL,	false,	NodeProperty.Type.ENUMERATION, "SingleValue", ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.class,"","",	"connector/diffusion/ComIbmEventInput",	"DiffusionConnector")
 		};
 	}
 
@@ -231,6 +263,26 @@ public class DiffusionSubscriberNodeUDN extends Node {
 	 */
 	public String getTopicSelector() {
 		return (String)getPropertyValue(DiffusionSubscriberNodeUDN.PROPERTY_TOPICSELECTOR);
+	}
+
+	/**
+	 * Set the <I>DiffusionSubscriberNodeUDN</I> "<I>Topic Type</I>" property
+	 * 
+	 * @param value ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE ; the value to set the property "<I>Topic Type</I>"
+	 */
+	public DiffusionSubscriberNodeUDN setTopicType(ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE value) {
+		setProperty(DiffusionSubscriberNodeUDN.PROPERTY_TOPICTYPE, value.toString());
+		return this;
+	}
+
+	/**
+	 * Get the <I>DiffusionSubscriberNodeUDN</I> "<I>Topic Type</I>" property
+	 * 
+	 * @return ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE; the value of the property "<I>Topic Type</I>"
+	 */
+	public ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE getTopicType() {
+		ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE value = ENUM_DIFFUSIONSUBSCRIBER_TOPICTYPE.getEnumFromString((String)getPropertyValue(DiffusionSubscriberNodeUDN.PROPERTY_TOPICTYPE));
+		return value;
 	}
 
 	public String getNodeName() {

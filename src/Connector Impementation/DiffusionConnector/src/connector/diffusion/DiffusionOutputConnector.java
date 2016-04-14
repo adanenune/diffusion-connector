@@ -5,12 +5,20 @@
  * 
  * Copyright (c) 2016, Push Technology Ltd., All rights reserved.
  * 
- * This program file is distributed under the MIT license. A copy of this license is included in the home directory
- * of the connector on OT4i.
+ * This program file is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  * 
  */
 
 package connector.diffusion;
+
 
 import java.util.Properties;
 
@@ -24,16 +32,18 @@ import com.pushtechnology.diffusion.client.Diffusion;
 import com.pushtechnology.diffusion.client.callbacks.ErrorReason;
 import com.pushtechnology.diffusion.client.callbacks.Registration;
 import com.pushtechnology.diffusion.client.session.Session;
+import com.pushtechnology.diffusion.client.session.SessionClosedException;
 import com.pushtechnology.diffusion.client.session.SessionEstablishmentException;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicAddFailReason;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicControl;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicControl.AddCallback;
-import com.pushtechnology.diffusion.client.topics.details.SingleValueTopicDetails;
-import com.pushtechnology.diffusion.client.topics.details.TopicDetails;
+import com.pushtechnology.diffusion.client.topics.details.TopicType;
+import com.pushtechnology.diffusion.datatype.json.JSON;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicUpdateControl;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicUpdateControl.UpdateSource;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicUpdateControl.Updater;
 import com.pushtechnology.diffusion.client.features.control.topics.TopicUpdateControl.Updater.UpdateCallback;
+import com.pushtechnology.diffusion.client.features.control.topics.TopicUpdateControl.ValueUpdater;
 
 
 public class DiffusionOutputConnector extends AbstractOutputConnector implements UpdateSource {
@@ -44,10 +54,12 @@ public class DiffusionOutputConnector extends AbstractOutputConnector implements
 	private String userName;
 	private String password;
 	private String topic;
+	private String topicType;
 	private Session session = null;
     private TopicControl topicControl;
     private TopicUpdateControl updateControl;
     private Updater updater = null;
+    private ValueUpdater<JSON> vu = null;
 
 	public DiffusionOutputConnector( String name) {
 		myName= name;
@@ -56,12 +68,13 @@ public class DiffusionOutputConnector extends AbstractOutputConnector implements
 	@Override
 	protected void onInitialise() throws Exception {
 		// Initialise connection details from properties
-		hostName = getProperties().getProperty("hostName");
-		port     = getProperties().getProperty("port");
-		protocol = getProperties().getProperty("protocol");
-		userName = getProperties().getProperty("userName");
-		password = getProperties().getProperty("password");
-		topic    = getProperties().getProperty("topic");
+		hostName  = getProperties().getProperty("hostName");
+		port      = getProperties().getProperty("port");
+		protocol  = getProperties().getProperty("protocol");
+		userName  = getProperties().getProperty("userName");
+		password  = getProperties().getProperty("password");
+		topic     = getProperties().getProperty("topic");
+		topicType = getProperties().getProperty("topicType");
 		
 		// Validate the properties. Log issue and throw exception if any are invalid. 
 		// TODO : check behaviour of framework if exception is thrown.
@@ -101,17 +114,20 @@ public class DiffusionOutputConnector extends AbstractOutputConnector implements
             	thread.setContextClassLoader(ccl);
         	}
 		}
+
+		logMessage("Connected to Diffusion.");
 		
 		// Get TopicControl feature and create configured topic
 		if(session != null) {
 			topicControl = session.feature(TopicControl.class);
 			updateControl = session.feature(TopicUpdateControl.class);
-			final SingleValueTopicDetails.Builder builder = topicControl.newDetailsBuilder(SingleValueTopicDetails.Builder.class);
-			final TopicDetails details = builder.metadata(Diffusion.metadata().string("IIBPayload")).build();
-			topicControl.addTopic(
-                topic,
-                details,
-                new TopicAddCallback(this));
+			if(topicType == "SingleValue") {
+				// Single Value Topic
+				topicControl.addTopic(topic, TopicType.SINGLE_VALUE, new TopicAddCallback(this));
+			} else {
+				// JSON Topic
+				topicControl.addTopic(topic, TopicType.JSON, new TopicAddCallback(this));
+			}
 		}
 		super.onInitialise();
 	}
@@ -141,10 +157,23 @@ public class DiffusionOutputConnector extends AbstractOutputConnector implements
         try {
         	 thread.setContextClassLoader(
                      Diffusion.class.getClassLoader());
-        	 updater.update(
-                topic,
-                Diffusion.content().newContent(data),
-                new UpdateCallback.Default());
+        	 if(topicType == "SingleValue") {
+        		 updater.update(
+        				 topic,
+        				 Diffusion.content().newContent(data),
+        				 new UpdateCallback.Default());
+        	 } else {
+        		 // Assume JSON for now...
+        		 try {
+					vu.update(topic,  Diffusion.dataTypes().json().fromJsonString(data), new UpdateCallback.Default());
+				} catch (SessionClosedException e) {
+					logMessage( "Session closed " + e.getMessage());
+				} catch (IllegalArgumentException e) {
+					logMessage( "Illegal arg " + e.getMessage());
+				} catch (Exception e) {
+					logMessage( "Exception " + e.getMessage());
+				}
+        	 }
         }
         finally {
             thread.setContextClassLoader(ccl);
@@ -215,6 +244,9 @@ public class DiffusionOutputConnector extends AbstractOutputConnector implements
 		if( theUpdater == null)
 			logMessage("Failed to create updater.");
 		updater = theUpdater;
+		if( topicType == "JSON") {
+			vu = updater.valueUpdater(JSON.class);
+		}
 	}
 
 	@Override

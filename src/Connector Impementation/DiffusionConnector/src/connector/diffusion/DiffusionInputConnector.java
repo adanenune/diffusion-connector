@@ -6,13 +6,21 @@
  * 
  * Copyright (c) 2016, Push Technology Ltd., All rights reserved.
  * 
- * This program file is distributed under the MIT license. A copy of this license is included in the home directory
- * of the connector on OT4i.
+ * This program file is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  * 
  */
 
 package connector.diffusion;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.connectors.AbstractInputConnector;
@@ -22,10 +30,13 @@ import com.pushtechnology.diffusion.client.callbacks.ErrorReason;
 import com.pushtechnology.diffusion.client.session.Session;
 import com.pushtechnology.diffusion.client.session.SessionEstablishmentException;
 import com.pushtechnology.diffusion.client.topics.details.TopicDetails;
+import com.pushtechnology.diffusion.client.topics.details.TopicSpecification;
 import com.pushtechnology.diffusion.client.features.Topics;
 import com.pushtechnology.diffusion.client.features.Topics.TopicStream;
+import com.pushtechnology.diffusion.client.features.Topics.UnsubscribeReason;
 import com.pushtechnology.diffusion.client.content.Content;
 import com.pushtechnology.diffusion.client.types.UpdateContext;
+import com.pushtechnology.diffusion.datatype.json.JSON;
 
 public class DiffusionInputConnector extends AbstractInputConnector {
 
@@ -36,6 +47,7 @@ public class DiffusionInputConnector extends AbstractInputConnector {
 	private String userName;
 	private String password;
 	private String topicSelector;
+	private String topicType;
 	private Session session = null;
 	private boolean started = false;
 	private boolean connected = false;
@@ -54,6 +66,7 @@ public class DiffusionInputConnector extends AbstractInputConnector {
 		userName = getProperties().getProperty("userName");
 		password = getProperties().getProperty("password");
 		topicSelector    = getProperties().getProperty("topicSelector");
+		topicType    = getProperties().getProperty("topicType"); // JSON or SingleValue
 
 		// Validate the properties. Log issue and throw exception if any are invalid. 
 		// TODO : check behaviour of framework if exception is thrown.
@@ -111,7 +124,11 @@ public class DiffusionInputConnector extends AbstractInputConnector {
 		if(connected) {
 			// Subscribe to configured topic selector
 			final Topics topics = session.feature(Topics.class);
-			topics.addTopicStream(topicSelector, new DiffusionTopicStream());
+			if(topicType == "SingleValue")
+				topics.addTopicStream(topicSelector, new DiffusionTopicStream());
+			else
+				topics.addStream(topicSelector, JSON.class, new DiffusionValueStream());
+
 			topics.subscribe(
 					Diffusion.topicSelectors().anyOf(topicSelector),
 						new Topics.CompletionCallback.Default());
@@ -162,6 +179,42 @@ public class DiffusionInputConnector extends AbstractInputConnector {
         }
     }
 	
+	private class DiffusionValueStream implements Topics.ValueStream<JSON> {
+		@Override
+		public void onSubscription(String topicPath, TopicSpecification topicSpec) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onClose() {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onError(ErrorReason err) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onValue(String topicPath, TopicSpecification spec, JSON newValue, JSON oldValue) {
+			// TODO Auto-generated method stub
+    		Properties props = new Properties();
+    		props.setProperty("topic", topicPath);
+    		try {
+				getCallback().processInboundData(newValue.toJsonString().getBytes(), props);
+			} catch (Exception e) {
+				logMessage(e.getMessage());
+			}
+		}
+
+		@Override
+		public void onUnsubscription(String arg0, TopicSpecification arg1, UnsubscribeReason arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	}
+
 	private void logMessage( String message ) {
 		getLogger().info("DiffusionInputConnector : " + myName + " : " + message);
 	}
